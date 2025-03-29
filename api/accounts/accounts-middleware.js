@@ -20,7 +20,7 @@ exports.checkAccountPayload = (req, res, next) => {
         message: 'name must be a string between 3 and 100 characters',
       }
     }
-    if (typeof req.body.budget !== 'number') {
+    if (typeof req.body.budget !== 'number' || isNaN(req.body.budget)) {
       throw {
         status: 400,
         message: 'budget must be a number',
@@ -39,9 +39,21 @@ exports.checkAccountPayload = (req, res, next) => {
 }
 
 exports.checkAccountNameUnique = (req, res, next) => {
-  // DO YOUR MAGIC
-  console.log('checkAccountNameUnique middleware')
-  next()
+  try {
+    if (req.body.name) { 
+      Account.getAll().then(accounts => { 
+        if (accounts.some(account => account.name === req.body.name)) {
+          throw {
+            status: 400,
+            message: 'that name is taken',
+          }
+        }
+      })
+    }
+    next()
+  } catch (err) {
+    next(err)
+  }
 }
 
 exports.checkAccountId = async (req, res, next) => {
