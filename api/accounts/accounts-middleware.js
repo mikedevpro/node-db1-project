@@ -25,7 +25,7 @@ exports.checkAccountPayload = (req, res, next) => {
     if (typeof req.body.budget !== 'number' || isNaN(req.body.budget)) {
       throw {
         status: 400,
-        message: 'budget must be a number',
+        message: 'budget of account must be a number',
       }
     }
     if (typeof req.body.budget !== 'number' || req.body.budget < 0 || req.body.budget > 1000000) {
@@ -52,10 +52,10 @@ exports.checkAccountNameUnique = async (req, res, next) => {
         message: 'that name is taken',
       })
     } else {
-        next()
+      next()
       }
     } catch (err) {
-    next(err)
+      next(err)
   }
 }
 
